@@ -1,3 +1,4 @@
+import './App.css';
 import { GoogleLogin } from 'react-google-login';
 import { useEffect, useState } from 'react';
 import { gapi } from 'gapi-script';
@@ -29,25 +30,23 @@ function App() {
   });
 
   return (
-    <div className="App">
+    <div>
       {googleId ? (
         <div>
           <h1>Identificador del usuario:</h1>
           <h2>{googleId}</h2>
         </div>
       ) : (
-        <div>
-          <GoogleLogin
+        <div className='login-card'>
+          <h1 className='login-card-title'>Login</h1>
+          <GoogleLogin className='center'
             clientId={clientId}
-            buttonText='Login'
+            buttonText='Usar Google'
             onSuccess={onSuccess}
             onFailure={onFailure}
             cookiePolicy={'single_host_origin'}
             isSignedIn={false}
           />
-          <h5>Credenciales de prueba</h5>
-          <h5>Correo: taylorswiftsongsgeneretor@gmail.com</h5>
-          <h5>Clave: taylorswift13</h5>
         </div>
       )}
     </div>
