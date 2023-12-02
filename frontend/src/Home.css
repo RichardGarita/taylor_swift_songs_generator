@@ -47,15 +47,23 @@
   overflow: auto;
 }
 
-.sidebar a {
-  display: block;
-  color: #FFFFFF;
-  padding: 16px;
-  font-family: Poppins-Regular;
-  text-decoration: none;
+body{
+  margin: 0;
 }
 
-.sidebar a:hover{
+.sidebar button {
+  display: block;
+  color: #FFFFFF;
+  background-color: #141414;
+  border: none;
+  padding: 16px;
+  font-family: Poppins-Regular;
+  font-size: large;
+  text-decoration: none;
+  width: 100%;
+}
+
+.sidebar button:hover{
   background-color: #282828;
   color: white;
 }
@@ -84,9 +92,6 @@ div.content {
 }
 
 .config {
-  position: fixed;
-  top: 10px;
-  right: 10px;
   cursor: pointer;
 }
 
@@ -98,9 +103,16 @@ div.content {
   z-index: 999;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 7vh;
+  padding: 0 10px;
+}
+
 .chatcontainer {
-  position: relative;
-  height: 90vh; 
+  height: 93vh; 
   width: 80%; 
   margin-left: auto; 
 }

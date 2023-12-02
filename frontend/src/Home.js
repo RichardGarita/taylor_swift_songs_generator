@@ -50,8 +50,6 @@ function Home() {
   const onFailure = (res) => {
     console.log("LOGIN FAILED! res: ", res);
   }
-
-  const cancionesSideBar = canciones.map((cancion) => <a href="#">{cancion.nombre}</a>);
   
   const inputRef = useRef();
   const [msgInputValue, setMsgInputValue] = useState("");
@@ -59,7 +57,21 @@ function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [temperature, setTemperature] = useState(50);
   const [showSlider, setShowSlider] = useState(false);
-  
+
+  // Al clickear una canción, se cambian los mensajes
+  const handleChosenSong = (song) => {
+    const startString = {
+      text: song.inicio,
+      direction: 'outgoing',
+    };
+    const lyrics = {
+      text: song.letra,
+      direction: 'incoming',
+    };
+    setMessages([startString, lyrics]);
+  }
+
+  const cancionesSideBar = canciones.map((cancion) => <button onClick={() => handleChosenSong(cancion)}>{cancion.nombre}</button>);
 
   const handleToggleSlider = () => {
     setShowSlider(!showSlider);
@@ -115,6 +127,20 @@ function Home() {
         direction: 'incoming',
       };
       setMessages((prevMessages) => [...prevMessages, responseMessage]);
+
+      // Se almacena la canción en el localStorage
+      if (googleId) {
+        const cancionesActuales = JSON.parse(localStorage.getItem(googleId)) || [];
+        const length = cancionesActuales.length + 1;
+        const nuevaCancion = { nombre: `Canción ${length}`, inicio: message, letra: response };
+
+        cancionesActuales.push(nuevaCancion);
+        localStorage.setItem(googleId, JSON.stringify(cancionesActuales));
+
+        // La canción se agrega también a las canciones mostradas en el sidebar
+        setCanciones([...canciones, nuevaCancion]);
+      }
+
     } catch (error) {
       const errorMessage = {
         text: 'Hubo un error, trata de nuevo más tarde',
@@ -134,31 +160,26 @@ function Home() {
     <div>
       {googleId ? (     
         <>
-        <h3 style={{textAlign: 'center'}}>Generador de canciones de Taylor Swift</h3>
-        <div class="sidebar">
-          {cancionesSideBar}
-        </div>
-        {/*
-          <div class="content">
-            <h1>Identificador del usuario:</h1>
-            <h2>{googleId}</h2>
-            <h3>Canciones guardadas: {localStorage.getItem(googleId)}</h3>
+        <div className='header'>
+          <h3 style={{textAlign: 'center', flexGrow: '1'}}>Generador de canciones de Taylor Swift</h3>
+          {/* Para la temperatura */}
+          <div className='config' onClick={handleToggleSlider}>
+            <span style={{ fontSize: '1.5em' }}>⚙️</span>
           </div>
-        */}
-        {/* Para la temperatura */}
-        <div className='config' onClick={handleToggleSlider}>
-          <span style={{ fontSize: '1.5em' }}>⚙️</span>
-        </div>
 
-        {showSlider && (
-          <div className='temperature'>
-            <p style={{textAlign: 'center', marginBottom:'0'}}>Temperatura</p>
-            <div className="slidecontainer">
-              <input type="range" min="1" max="100" value={temperature} className="slider" id="myRange" onChange={handleSliderChange} />
+          {showSlider && (
+            <div className='temperature'>
+              <p style={{textAlign: 'center', marginBottom:'0'}}>Temperatura</p>
+              <div className="slidecontainer">
+                <input type="range" min="1" max="100" value={temperature} className="slider" id="myRange" onChange={handleSliderChange} />
+              </div>
+              <p style={{textAlign: 'center', marginTop: '0px'}}>{temperature}</p>
             </div>
-            <p style={{textAlign: 'center', marginTop: '0px'}}>{temperature}</p>
+          )}
+        </div>
+        <div class="sidebar">
+            {cancionesSideBar}
           </div>
-        )}
         <div className='chatcontainer'>
           <MainContainer>
             <ChatContainer>
