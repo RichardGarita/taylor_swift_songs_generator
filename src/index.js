@@ -1,11 +1,13 @@
 const express = require('express');
+const cors = require('cors'); // Importa el middleware cors
 const tf = require('@tensorflow/tfjs-node');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = 4223;
 
 app.use(express.json());
+app.use(cors());
 
 let model;
 
