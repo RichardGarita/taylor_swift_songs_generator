@@ -115,7 +115,6 @@ function Home() {
         direction: 'incoming',
       };
       setMessages((prevMessages) => [...prevMessages, responseMessage]);
-      localStorage.setItem(googleId, {nombre: 'pp'});
     } catch (error) {
       const errorMessage = {
         text: 'Hubo un error, trata de nuevo más tarde',
@@ -147,28 +146,12 @@ function Home() {
           </div>
         */}
         {/* Para la temperatura */}
-        <div
-          style={{
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-            cursor: 'pointer',
-          }}
-          onClick={handleToggleSlider}
-        >
+        <div className='config' onClick={handleToggleSlider}>
           <span style={{ fontSize: '1.5em' }}>⚙️</span>
         </div>
 
         {showSlider && (
-          <div
-            style={{
-              position: 'fixed',
-              top: '15px',
-              right: '70px',
-              width: '200px',
-              zIndex: '999',
-            }}
-          >
+          <div className='temperature'>
             <p style={{textAlign: 'center', marginBottom:'0'}}>Temperatura</p>
             <div className="slidecontainer">
               <input type="range" min="1" max="100" value={temperature} className="slider" id="myRange" onChange={handleSliderChange} />
@@ -176,8 +159,7 @@ function Home() {
             <p style={{textAlign: 'center', marginTop: '0px'}}>{temperature}</p>
           </div>
         )}
-        <div style={{ position: "relative", height: "90vh", width: '80%', marginLeft: 'auto' }}>
-          
+        <div className='chatcontainer'>
           <MainContainer>
             <ChatContainer>
 

@@ -83,6 +83,28 @@ div.content {
   }
 }
 
+.config {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.temperature {
+  position: fixed;
+  top: 15px;
+  right: 70px;
+  width: 200px;
+  z-index: 999;
+}
+
+.chatcontainer {
+  position: relative;
+  height: 90vh; 
+  width: 80%; 
+  margin-left: auto; 
+}
+
 .slidecontainer {
   width: 100%; /* Width of the outside container */
 }
