@@ -1,4 +1,4 @@
-import './App.css';
+import './Home.css';
 import { GoogleLogin } from 'react-google-login';
 import { useEffect, useState, useRef } from 'react';
 import { gapi } from 'gapi-script';
@@ -21,7 +21,7 @@ const clientId = "759143959718-add95sbrvk9elamjjn4331vnk15hrf30.apps.googleuserc
 
 const URLAPI = 'http://localhost:4223/taylor_swift'
 
-function App() {
+function Home() {
 
   const [googleId, setGoogleId] = useState(null);
   const [canciones, setCanciones] = useState([]);
@@ -38,19 +38,20 @@ function App() {
 
   const onSuccess = (res) => {
     console.log("LOGIN SUCCESS! Current user: ", res.profileObj);
+    console.log();
     setGoogleId(res.profileObj.googleId);
-    setCanciones(JSON.parse(localStorage.getItem(res.profileObj.googleId)));
+    if(localStorage.getItem(res.profileObj.googleId)){
+      setCanciones(JSON.parse(localStorage.getItem(res.profileObj.googleId)));
+    } else {
+      setCanciones(JSON.parse("[]"));
+    }
   }
 
   const onFailure = (res) => {
     console.log("LOGIN FAILED! res: ", res);
   }
 
-  const cancionesSideBar = canciones ? (
-    canciones.map((cancion) => <a href="#">{cancion.nombre}</a>)
-  ) : (
-    <p>No hay canciones disponibles</p>
-  );
+  const cancionesSideBar = canciones.map((cancion) => <a href="#">{cancion.nombre}</a>);
   
   const inputRef = useRef();
   const [msgInputValue, setMsgInputValue] = useState("");
@@ -234,4 +235,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
