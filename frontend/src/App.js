@@ -23,18 +23,8 @@ const URLAPI = 'http://localhost:4223/taylor_swift'
 
 function App() {
 
-  const onSuccess = (res) => {
-    console.log("LOGIN SUCCESS! Current user: ", res.profileObj);
-    setGoogleId(res.profileObj.googleId);
-  }
-
-  const onFailure = (res) => {
-    console.log("LOGIN FAILED! res: ", res);
-  }
-  
   const [googleId, setGoogleId] = useState(null);
-
-  //localStorage.setItem('111045705164865416538', JSON.stringify(letras));
+  const [canciones, setCanciones] = useState([]);
 
   useEffect(() => {
     function start() {
@@ -46,6 +36,22 @@ function App() {
     gapi.load('client:auth2', start);
   });
 
+  const onSuccess = (res) => {
+    console.log("LOGIN SUCCESS! Current user: ", res.profileObj);
+    setGoogleId(res.profileObj.googleId);
+    setCanciones(JSON.parse(localStorage.getItem(res.profileObj.googleId)));
+  }
+
+  const onFailure = (res) => {
+    console.log("LOGIN FAILED! res: ", res);
+  }
+
+  const cancionesSideBar = canciones ? (
+    canciones.map((cancion) => <a href="#">{cancion.nombre}</a>)
+  ) : (
+    <p>No hay canciones disponibles</p>
+  );
+  
   const inputRef = useRef();
   const [msgInputValue, setMsgInputValue] = useState("");
   const [messages, setMessages] = useState([]);
@@ -108,6 +114,7 @@ function App() {
         direction: 'incoming',
       };
       setMessages((prevMessages) => [...prevMessages, responseMessage]);
+      localStorage.setItem(googleId, {nombre: 'pp'});
     } catch (error) {
       const errorMessage = {
         text: 'Hubo un error, trata de nuevo más tarde',
@@ -125,40 +132,50 @@ function App() {
 
   return (
     <div>
-      {googleId ? (
-        <div style={{ position: "relative", height: "500px" }}>
-          <h3 style={{textAlign: 'center'}}>Generador de canciones de Taylor Swift</h3>
+      {googleId ? (     
+        <>
+        <h3 style={{textAlign: 'center'}}>Generador de canciones de Taylor Swift</h3>
+        <div class="sidebar">
+          {cancionesSideBar}
+        </div>
+        {/*
+          <div class="content">
+            <h1>Identificador del usuario:</h1>
+            <h2>{googleId}</h2>
+            <h3>Canciones guardadas: {localStorage.getItem(googleId)}</h3>
+          </div>
+        */}
+        {/* Para la temperatura */}
+        <div
+          style={{
+            position: 'fixed',
+            top: '10px',
+            right: '10px',
+            cursor: 'pointer',
+          }}
+          onClick={handleToggleSlider}
+        >
+          <span style={{ fontSize: '1.5em' }}>⚙️</span>
+        </div>
 
-          {/* Para la temperatura */}
+        {showSlider && (
           <div
             style={{
               position: 'fixed',
-              top: '10px',
-              right: '10px',
-              cursor: 'pointer',
+              top: '15px',
+              right: '70px',
+              width: '200px',
+              zIndex: '999',
             }}
-            onClick={handleToggleSlider}
           >
-            <span style={{ fontSize: '1.5em' }}>⚙️</span>
-          </div>
-
-          {showSlider && (
-            <div
-              style={{
-                position: 'fixed',
-                top: '15px',
-                right: '70px',
-                width: '200px',
-                zIndex: '999',
-              }}
-            >
-              <p style={{textAlign: 'center', marginBottom:'0'}}>Temperatura</p>
-              <div className="slidecontainer">
-                <input type="range" min="1" max="100" value={temperature} className="slider" id="myRange" onChange={handleSliderChange} />
-              </div>
-              <p style={{textAlign: 'center', marginTop: '0px'}}>{temperature}</p>
+            <p style={{textAlign: 'center', marginBottom:'0'}}>Temperatura</p>
+            <div className="slidecontainer">
+              <input type="range" min="1" max="100" value={temperature} className="slider" id="myRange" onChange={handleSliderChange} />
             </div>
-          )}
+            <p style={{textAlign: 'center', marginTop: '0px'}}>{temperature}</p>
+          </div>
+        )}
+        <div style={{ position: "relative", height: "90vh", width: '80%', marginLeft: 'auto' }}>
           
           <MainContainer>
             <ChatContainer>
@@ -199,6 +216,7 @@ function App() {
             </ChatContainer>
           </MainContainer>
         </div>
+        </>
       ) : (
         <div className='login-card'>
           <h1 className='login-card-title'>Login</h1>
