@@ -1,4 +1,4 @@
-import './App.css';
+import './Home.css';
 import { GoogleLogin } from 'react-google-login';
 import { useEffect, useState } from 'react';
 import { gapi } from 'gapi-script';
@@ -6,7 +6,7 @@ import React  from 'react';
 
 const clientId = "759143959718-add95sbrvk9elamjjn4331vnk15hrf30.apps.googleusercontent.com";
 
-function App() {
+function Home() {
 
   const [googleId, setGoogleId] = useState(null);
   const [canciones, setCanciones] = useState([]);
@@ -23,17 +23,20 @@ function App() {
 
   const onSuccess = (res) => {
     console.log("LOGIN SUCCESS! Current user: ", res.profileObj);
+    console.log();
     setGoogleId(res.profileObj.googleId);
-    setCanciones(JSON.parse(localStorage.getItem(res.profileObj.googleId)));
+    if(localStorage.getItem(res.profileObj.googleId)){
+      setCanciones(JSON.parse(localStorage.getItem(res.profileObj.googleId)));
+    } else {
+      setCanciones(JSON.parse("[]"));
+    }
   }
 
   const onFailure = (res) => {
     console.log("LOGIN FAILED! res: ", res);
   }
 
-  const cancionesSideBar = canciones.map((cancion) =>
-    <a href="#">{cancion.nombre}</a>
-  );
+  const cancionesSideBar = canciones.map((cancion) => <a href="#">{cancion.nombre}</a>);
   
   return (
     <div>
@@ -65,4 +68,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
